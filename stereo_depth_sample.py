@@ -33,6 +33,7 @@ cfg.enable_stream(rs.stream.fisheye, 2)
 # Start streaming with requested config
 pipe.start(cfg)
 print('press q to quit this program')
+p = 0
 
 try:
     while True:
@@ -56,22 +57,36 @@ try:
         rect_left_image = fisheye_left_image[y1:y2, x1:x2]
         rect_right_image = fisheye_right_image[y1:y2, x1:x2]
         disparity = stereo.compute(rect_left_image, rect_right_image).astype(np.float32)/16
+
+        max_dis = 0
+        for i in range(10):
+            for j in range(10)
+                if max_dis < disparity[i-5][j-5]:
+                    max_dis = disparity[i-5][j-5]
+        
         disparity = (disparity - minDisp) / numDisp
 
+        # object center detecting
         rows, columns = disparity.shape
         temp = np.ones(shape=(1, rows), dtype=np.float32)
-        line = (temp @ disparity).argmax()
+        line1 = (temp @ disparity).argmax()
 
+        temp = np.ones(shape=(columns, 1), dtype=np.float32)
+        line2 = (disparity @ temp).argmax()
+        
         # Display images
         cv2.rectangle(fisheye_left_image, (x1, y1), (x2, y2), (255,255,255), 5)
         cv2.rectangle(fisheye_right_image, (x1, y1), (x2, y2), (255,255,255), 5)
-        cv2.line(disparity,(line, 0), (line, rows), (255, 255, 0), thickness=10, lineType=cv2.LINE_AA)
+        cv2.line(disparity,(line1, 0), (line1, rows), (255, 255, 0), thickness=10, lineType=cv2.LINE_AA)
+        cv2.line(disparity,(0, line2), (columns, line2), (255, 255, 0), thickness=10, lineType=cv2.LINE_AA)
         cv2.imshow('fisheye target', np.hstack((fisheye_left_image, fisheye_right_image)))
         cv2.imshow('disparity', disparity)
 
+        print(max_dis)
+        
         key = cv2.waitKey(1)
         if key == ord('q'):
             break
-
+        
 finally:
     pipe.stop()
