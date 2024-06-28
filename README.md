@@ -12,7 +12,7 @@
 
 ------------
 
-##### Vision based Autonomous Human Following Wheeled Mobile Robot : Object recognition method using T265
+#### Vision based Autonomous Human Following Wheeled Mobile Robot : Object recognition method using T265
 
 인하대학교 알파프로젝트 TEAM. TurtleShip 프로젝트
 
